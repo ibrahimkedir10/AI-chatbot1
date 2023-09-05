@@ -1,0 +1,64 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motivational Chatbot</title>
+</head>
+</head>
+<body>
+    <h1>Motivational Chatbot</h1>
+    <p>Select an issue:</p>
+    <button id="work-button">Work</button>
+    <button id="life-button">Life</button>
+    <button id="personal-button">Personal</button>
+    <hr>
+    <!-- Add a loading message -->
+    <div id="loading-message" style="display: none;">Fetching a motivational quote...</div>
+    <div id="chat-container">
+        <div id="chat-output"></div>
+    </div>
+    <script>
+        const chatOutput = document.getElementById("chat-output");
+
+        function showMessage(message) {
+            const messageDiv = document.createElement("div");
+            messageDiv.textContent = message;
+            chatOutput.appendChild(messageDiv);
+        }
+
+        document.getElementById("work-button").addEventListener("click", () => {
+            fetch("/change_issue/work")
+                .then((response) => response.json())
+                .then((data) => showMessage(data.message));
+        });
+
+        document.getElementById("life-button").addEventListener("click", () => {
+            fetch("/change_issue/life")
+                .then((response) => response.json())
+                .then((data) => showMessage(data.message));
+        });
+
+        document.getElementById("personal-button").addEventListener("click", () => {
+            fetch("/change_issue/personal")
+                .then((response) => response.json())
+                .then((data) => showMessage(data.message));
+        });
+
+        function getQuote() {
+            // Display a loading message while waiting for the response
+            document.getElementById("loading-message").style.display = "block";
+            
+            fetch("/get_quote")
+                .then((response) => response.json())
+                .then((data) => {
+                    showMessage(data.quote);
+                    // Hide the loading message once the response is received
+                    document.getElementById("loading-message").style.display = "none";
+                });
+        }
+    </script>
+</body>
+</html>
